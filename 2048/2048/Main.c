@@ -3,126 +3,99 @@
 #include <conio.h> 
 #include <time.h>
 #include <windows.h>
+int sum[4][4];	                                  //4*4çš„æ ¼å­ä¸­æ‰€å«çš„æ•¸å­— 
+int checking = 0;	                                 //æª¢æŸ¥æ˜¯å¦é‚„å¯ä»¥ç§»å‹• 
+char ch;	                                                   //æŠ“æ–¹å‘ç”¨ 
+char replay;	                                               //æ˜¯å¦é‡ç© 
+int max = 0;	                                                 //æœ€é«˜åˆ† 
+int score = 0;                                                     //åˆ†æ•¸ 
 
-int sum[4][4];	                                  //4*4ªº®æ¤l¤¤©Ò§tªº¼Æ¦r 
-int num[4][4];									//ÀË¬d¬O§_¦³²¾°Ê 
-int over;
-int temp[8] = { 2,2,2,2,2,2,2,4 };
-char ch;
-int max = 0;	                                                 //³Ì°ª¤À 
-int score = 0;
-void square()
+void plus() {
+    int i, j;	                                                   //åº§æ¨™ 
+    if (ch == 75)	                                  /*å¾€å·¦ç§»å‹•(å°åº§æ¨™)*/
+        for (i = 0; i < 4; i++)
+            for (j = 0; j < 3; j++)
+                if (sum[i][j] == sum[i][j + 1]) {
+                    sum[i][j] += sum[i][j + 1];
+                    sum[i][j + 1] = 0;
+                    score += sum[i][j];
+                }
+    if (ch == 77)	                                  /*å¾€å³ç§»å‹•(å¤§åº§æ¨™)*/
+        for (i = 0; i < 4; i++)
+            for (j = 3; j >= 0; j--)
+                if (sum[i][j] == sum[i][j - 1]) {
+                    sum[i][j] += sum[i][j - 1];
+                    sum[i][j - 1] = 0;
+                    score += sum[i][j];
+                }
+    if (ch == 72)	                                  /*å¾€ä¸Šç§»å‹•(å°åº§æ¨™)*/
+        for (i = 0; i < 4; i++)
+            for (j = 0; j < 3; j++)
+                if (sum[j][i] == sum[j + 1][i]) {
+                    sum[j][i] += sum[j + 1][i];
+                    sum[j + 1][i] = 0;
+                    score += sum[j][i];
+                }
+    if (ch == 80)	                                  /*å¾€ä¸‹ç§»å‹•(å¤§åº§æ¨™)*/
+        for (i = 0; i < 4; i++)
+            for (j = 3; j >= 0; j--)
+                if (sum[j][i] == sum[j - 1][i]) {
+                    sum[j][i] += sum[j - 1][i];
+                    sum[j - 1][i] = 0;
+                    score += sum[j][i];
+                }
+}
+int point() {
+    int i, j;	                                                   //åº§æ¨™ 
+
+    for (i = 0; i < 4; i++)	                                  /*å°‹æ‰¾æ˜¯å¦æœ‰0*/
+        for (j = 0; j < 4; j++)
+            if (sum[i][j] == 0)
+                checking++;
+    for (i = 0; i < 4; i++)
+        for (j = 0; j < 3; j++)
+            if (sum[i][j] == sum[i][j + 1])
+                checking++;
+    for (i = 0; i < 4; i++)
+        for (j = 3; j >= 0; j--)
+            if (sum[i][j] == sum[i][j - 1])
+                checking++;
+    for (i = 0; i < 4; i++)
+        for (j = 0; j < 3; j++)
+            if (sum[j][i] == sum[j + 1][i])
+                checking++;
+    for (i = 0; i < 4; i++)
+        for (j = 3; j >= 0; j--)
+            if (sum[j][i] == sum[j - 1][i])
+                checking++;
+    if (checking == 0) {
+        int i, j;	                                               //åº§æ¨™ 
+        printf("\n\n                                                    YOU LOSE!!!");
+        Sleep(3000);
+        system("cls");
+        printf(" \n\n\n                                                  éŠæˆ²çµæŸ\n\n\n\n");
+        printf("  ç•¶å±€åˆ†æ•¸:%d   æœ€é«˜åˆ†:%d\n\n\n\n", score, max);
+        printf("æ˜¯å¦é‡æ–°é–‹å§‹(Y/N) ? ");
+        scanf(" %c", &replay);
+        if (replay == 'Y') {
+            for (i = 0; i < 4; i++)	                             /*æ¸…ç©ºæ•¸å­—*/
+                for (j = 0; j < 4; j++)
+                    sum[i][j] = 0;
+        }
+        if (replay == 'N') {
+            bye();
+            return 0;
+        }
+    }
+}
+void reset() {
+    int i, j;
+    score = 0;
+    for (i = 0; i < 4; i++)	                                     /*æ¸…ç©ºæ•¸å­—*/
+        for (j = 0; j < 4; j++)
+            sum[i][j] = 0;
+}
+int main(int argc, char* argv[])
 {
-	system("cls");	                    /*²MªÅµe­±¡AÅı·sªºµe­±¯àÂĞ»\ÂÂªº*/
-	int i, j;	                                                 //°j°é¥Î
-	int k = 0;
-	printf("\n\n\n  ³Ì°ª¬ö¿ı:%d   ·í«e¤À¼Æ:%d\n", max, score);
-	/*¦L¥X4*4®æ¤l*/
-	printf("\n\n----------------------------\n");
-	for (i = 0; i < 4; i++) {
-		printf("                                          |");
-		for (j = 0; j < 4; j++)
-		{
-			if (sum[i][j] == 0)	                /*¦pªG®y¼Ğ¬°0®É¤£¦L¼Æ¦r*/
-				printf("     | ");
-			else
-				printf("%4d | ", sum[i][j]);
-		}
-		printf("\n----------------------------\n");
-	}
-	printf("\n  ­«·s¶}©l½Ğ«öªÅ¥ÕÁä\n");
-	for (i = 0; 4 > i; i++)
-		for (j = 0; 4 > j; j++)
-		{
-			if (sum[i][j] > 0)
-				k++;
-		}
-	if (k >= 16)
-	{
-		printf("\n\n¥[ªo°Ú!¦×Âû!");
-	}
-	printf("\n\n\n²Õ­û:¶ÀªlŞ³");
-	printf("\n¸³®a¨å");
-	printf("\n¿½©v»«");
-}
-void copy()
-{
-	int i, j, k;	                                          //®y¼Ğ / °j°é¥Î
-	for (i = 0; i < 4; i++)
-		for (j = 0; j < 4; j++)
-			num[i][j] = sum[i][j];
-}
-void lave() {	                 //­Y³Ñ¾lªºªÅ­Ó¼Æ¤p©ó¹w³]¥Í¦¨¼Æ¥iÄ~Äò¥Í¦¨ 
-	int i, j;
-	over = 0;
-	for (j = 0; 4 > j; j++)
-		for (i = 0; 4 > i; i++)
-			if (sum[i][j] == 0)
-				over++;
-
-}
-void move() {
-	int i, j, k;	                                          //®y¼Ğ / °j°é¥Î 
-	int temp;                                               //¼È¦s¼Æ¦r 
-
-	if (ch == 75)	                                  /*©¹¥ª²¾°Ê(¤p®y¼Ğ)*/
-		for (i = 0; i < 4; i++)
-			for (k = 0; k < 4; k++)
-				for (j = 0; j < 3; j++)
-					if (sum[i][j] == 0 && sum[i][j + 1] > 0) {
-						temp = sum[i][j];
-						sum[i][j] = sum[i][j + 1];
-						sum[i][j + 1] = temp;
-					}
-	if (ch == 77)	                                  /*©¹¥k²¾°Ê(¤j®y¼Ğ)*/
-		for (i = 0; i < 4; i++)
-			for (k = 0; k < 4; k++)
-				for (j = 0; j < 3; j++)
-					if (sum[i][j + 1] == 0 && sum[i][j] > 0) {
-						temp = sum[i][j + 1];
-						sum[i][j + 1] = sum[i][j];
-						sum[i][j] = temp;
-					}
-	if (ch == 72)	                                  /*©¹¤W²¾°Ê(¤p®y¼Ğ)*/
-		for (i = 0; i < 4; i++)
-			for (k = 0; k < 4; k++)
-				for (j = 0; j < 3; j++)
-					if (sum[j][i] == 0 && sum[j + 1][i] > 0) {
-						temp = sum[j][i];
-						sum[j][i] = sum[j + 1][i];
-						sum[j + 1][i] = temp;
-					}
-	if (ch == 80)	                                 /*©¹¤U²¾°Ê(¤j®y¼Ğ)*/
-		for (i = 0; i < 4; i++)
-			for (k = 0; k < 4; k++)
-				for (j = 0; j < 3; j++)
-					if (sum[j + 1][i] == 0 && sum[j][i] > 0) {
-						temp = sum[j][i];
-						sum[j][i] = sum[j + 1][i];
-						sum[j + 1][i] = temp;
-					}
-	for (i = 0; i < 4; i++)	                                   /*´M§ä³Ì¤j¼Æ*/
-		for (j = 0; j < 4; j++)
-			if (score > max)
-				max = score;
-}
-
-
-
-/*
-	Áä½L(¤W) 72
-	Áä½L(¤U) 80
-	Áä½L(¥ª) 75
-	Áä½L(¥k) 77
-
-®y¼Ğ(sum[i][j]):
-	00	01	02	03
-	10	11	12	13
-	20	21	22	23
-	30	31	32	33
-*/
-int main()
-{
-	system("pause");
-	return 0;
+    system("pause");;
 }
