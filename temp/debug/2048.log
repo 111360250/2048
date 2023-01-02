@@ -1,4 +1,5 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(376,5): warning MSB8004: Intermediate 目錄結尾不是結尾斜線。這個建置執行個體將會加入此斜線，因為這樣才能正確評估 Intermediate 目錄。
 C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output 目錄結尾不是結尾斜線。這個建置執行個體將會加入此斜線，因為這樣才能正確評估 Output 目錄。
   Main.c
-  2048.vcxproj -> C:\Users\黃俊漢\OneDrive\桌面\程式專題\2048\2048\..\..\temp\debug\2048.exe
+c:\users\黃俊漢\onedrive\桌面\2048\2048\2048\main.c(50): warning C4101: 'k': 未參考的區域變數
+  2048.vcxproj -> C:\Users\黃俊漢\OneDrive\桌面\2048\2048\2048\..\..\temp\debug\2048.exe
